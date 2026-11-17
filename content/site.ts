@@ -245,10 +245,10 @@ export const community = [
     text: "Student volunteer group for social welfare and the environment.",
     photos: [
       { src: "/photos/hashimukh-school-banner.jpg", alt: "HASHIMUKH volunteers with schoolchildren outside a primary school" },
-      { src: "/photos/hashimukh-school-children.jpg", alt: "Schoolchildren cheering during a HASHIMUKH school visit" },
-      { src: "/photos/hashimukh-classroom.jpg", alt: "Volunteers running an activity with children in a classroom" },
       { src: "/photos/hashimukh-meal.jpg", alt: "Rubya serving a meal to children" },
       { src: "/photos/hashimukh-distribution.jpg", alt: "Volunteers handing out supplies" },
+      { src: "/photos/hashimukh-school-children.jpg", alt: "Schoolchildren cheering during a HASHIMUKH school visit" },
+      { src: "/photos/hashimukh-classroom.jpg", alt: "Volunteers running an activity with children in a classroom" },
       { src: "/photos/hashimukh-relief.jpg", alt: "Relief packages being distributed to families" },
       { src: "/photos/hashimukh-campus-group.jpg", alt: "HASHIMUKH members on campus with their banner" },
       { src: "/photos/hashimukh-banner.jpg", alt: "HASHIMUKH members with an event banner" },

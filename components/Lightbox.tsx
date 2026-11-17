@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef } from "react";
-import type { CertCategory } from "@/content/site";
 import { project, rubberband, spring } from "@/lib/motion";
 
-type Cert = { file: string; title: string; detail: string; category: CertCategory };
+// Anything the viewer can show: `file` is its id (matches the thumbnail data-thumb), `src` the full-size image.
+export type ViewerItem = { file: string; src: string; title: string; detail: string; alt?: string };
 
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
@@ -20,7 +20,7 @@ function visibleThumb(file: string) {
  * Certificate viewer. Swipe sideways to move between certificates (tracks the finger 1:1, rubber-bands at the ends,
  * flicks carry momentum), drag down to dismiss. Opens out of the tapped thumbnail and shrinks back into it.
  */
-export function Lightbox({ list, file, onNavigate, onClosed }: { list: Cert[]; file: string | null; onNavigate: (file: string) => void; onClosed: () => void }) {
+export function Lightbox({ list, file, onNavigate, onClosed }: { list: ViewerItem[]; file: string | null; onNavigate: (file: string) => void; onClosed: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -195,7 +195,7 @@ export function Lightbox({ list, file, onNavigate, onClosed }: { list: Cert[]; f
             <div ref={track} className="flex h-full w-full will-change-transform">
               {[prev, cur, next].map((c, slot) => (
                 <div key={slot} aria-hidden={slot !== 1} className="h-full w-full shrink-0 p-3 sm:p-5">
-                  {c && <img src={`/certificates/${c.file}.jpg`} alt={slot === 1 ? `Certificate: ${c.title}` : ""} draggable={false} className="h-full w-full bg-white object-contain" />}
+                  {c && <img src={c.src} alt={slot === 1 ? (c.alt ?? c.title) : ""} draggable={false} className="h-full w-full object-contain" />}
                 </div>
               ))}
             </div>
@@ -221,7 +221,8 @@ export function Lightbox({ list, file, onNavigate, onClosed }: { list: Cert[]; f
           </div>
         </div>
       )}
-      <img ref={flyer} alt="" aria-hidden className="pointer-events-none fixed z-10 hidden bg-white object-contain p-1.5" />
+      {/* src is swapped in at flight time; a blank GIF until then so it's never a broken image */}
+      <img ref={flyer} src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" aria-hidden className="pointer-events-none fixed z-10 hidden object-contain" />
     </dialog>
   );
 }

@@ -1,10 +1,11 @@
 import { Cta } from "@/components/Cta";
+import { PhotoSet } from "@/components/PhotoSet";
 import { CopyEmail } from "@/components/CopyEmail";
 import { CertificateGallery } from "@/components/CertificateGallery";
 import { Nav } from "@/components/Nav";
 import { FishMussel, FloatingGarden, GlobeRoute } from "@/components/Illustrations";
 import {
-  type Photo, siteUrl, profile, contact, education, awards, pathway, research, me, publications, skills,
+  siteUrl, profile, contact, education, awards, pathway, research, me, publications, skills,
   leadership, conferences, training, community, languages, certificates,
 } from "@/content/site";
 
@@ -53,20 +54,6 @@ function Authors({ text }: { text: string }) {
 // Stagger step for the hero's load animation (see .rise in globals.css).
 const d = (n: number) => ({ "--d": n }) as React.CSSProperties;
 
-// A row of photos: swipeable on phones, a grid on larger screens.
-function Photos({ items, className = "" }: { items?: Photo[]; className?: string }) {
-  if (!items?.length) return null;
-  return (
-    <ul className={`-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0 ${className}`}>
-      {items.map((p) => (
-        <li key={p.src} className="w-[72%] shrink-0 snap-start scroll-ml-4 sm:w-auto">
-          <img src={p.src} alt={p.alt} loading="lazy" decoding="async" className="aspect-4/3 w-full rounded-xl bg-paper-2 object-cover" />
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 // Italicise species binomials written in parentheses, e.g. "(Oreochromis niloticus)".
 function Sci({ text }: { text: string }) {
   return (
@@ -92,7 +79,7 @@ export default function Home() {
     ["ResearchGate", contact.researchgate],
   ].filter(([, url]) => url);
   const words = profile.name.split(" ");
-  const groups = [...new Set(skills.map((s) => s.group))];
+  const groups = [...new Set(skills.filter((s) => !s.image).map((s) => s.group))];
   const pictured = skills.filter((s) => s.image);
   // Until contact details exist, don't send visitors to an empty section.
   const hasContact = Boolean(contact.email || links.length);
@@ -294,7 +281,7 @@ export default function Home() {
               <div key={g} className="reveal">
                 <p className="border-b border-ink pb-2 text-sm font-semibold">{g}</p>
                 <ul className="mt-3 flex flex-wrap gap-2">
-                  {skills.filter((s) => s.group === g).map((s) => (
+                  {skills.filter((s) => s.group === g && !s.image).map((s) => (
                     <li key={s.title} className="rounded-full border border-line bg-paper px-3 py-1 text-sm">
                       {s.title}
                     </li>
@@ -389,7 +376,7 @@ export default function Home() {
               </div>
             </div>
 
-            <Photos items={leadership.photos} className="reveal mt-12" />
+            <PhotoSet photos={leadership.photos} label={leadership.name} className="reveal mt-12" />
 
             <h3 className="mt-16 font-display text-2xl sm:mt-24 sm:text-3xl">Community service</h3>
             <ul className="mt-6 divide-y divide-line border-y border-line">
@@ -400,7 +387,7 @@ export default function Home() {
                     <p className="text-sm text-river">{c.role}</p>
                   </div>
                   {c.text && <p className="max-w-[60ch] text-muted">{c.text}</p>}
-                  {"photos" in c && <Photos items={c.photos} className="mt-4 sm:col-span-2" />}
+                  {"photos" in c && <PhotoSet photos={c.photos} label={c.name} className="mt-4 sm:col-span-2" />}
                 </li>
               ))}
             </ul>
@@ -425,7 +412,7 @@ export default function Home() {
                     <CertLink file={c.cert} />
                   </p>
                 )}
-                {"photos" in c && <Photos items={c.photos} className="mt-5" />}
+                {"photos" in c && <PhotoSet photos={c.photos} label={c.title} className="mt-5" />}
               </li>
             ))}
           </ol>

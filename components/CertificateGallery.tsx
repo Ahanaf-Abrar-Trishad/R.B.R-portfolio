@@ -31,7 +31,7 @@ export function CertificateGallery({ certs }: { certs: Cert[] }) {
 
   const shown = filter === "All" ? certs : certs.filter((c) => c.category === filter);
   // Browse within the visible tab; certificates opened from elsewhere on the page browse the full set.
-  const list = open && shown.some((c) => c.file === open) ? shown : certs;
+  const list = (open && shown.some((c) => c.file === open) ? shown : certs).map((c) => ({ ...c, src: `/certificates/${c.file}.jpg`, alt: `Certificate: ${c.title}` }));
   const setHash = (file: string | null) => history.replaceState(null, "", location.pathname + location.search + (file ? `#cert=${file}` : ""));
 
   return (
