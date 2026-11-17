@@ -10,7 +10,7 @@ import {
 } from "@/content/site";
 
 const nav = [
-  ["about", "About"],
+  ["about", "Education"],
   ["research", "Research"],
   ["publications", "Publications"],
   ["leadership", "Leadership"],
@@ -139,9 +139,14 @@ export default function Home() {
             <p className="rise mt-6 text-lg font-medium" style={d(3)}>
               {profile.affiliation}
             </p>
-            <p className="rise mt-4 max-w-[58ch] text-lg text-muted" style={d(4)}>
-              {profile.tagline}
-            </p>
+            {/* About me, in the hero: first paragraph leads, the rest are quieter. */}
+            <div className="mt-6 max-w-[60ch] space-y-4">
+              {profile.bio.map((p, i) => (
+                <p key={i} className={`rise leading-relaxed ${i === 0 ? "text-lg" : "text-muted"}`} style={d(4 + i * 0.5)}>
+                  {p}
+                </p>
+              ))}
+            </div>
             <div className="rise mt-10 flex flex-wrap items-center gap-x-8 gap-y-4" style={d(5)}>
               <Cta href="#research">Explore my research</Cta>
               <a href={second.href} className="font-medium underline decoration-line underline-offset-[6px] hover:decoration-ink">
@@ -185,15 +190,7 @@ export default function Home() {
           </aside>
         </section>
 
-        <Section id="about" title="About">
-          <div className="reveal mb-16 max-w-[62ch] space-y-5">
-            {profile.bio.map((p, i) => (
-              <p key={i} className={i === 0 ? "text-xl leading-relaxed" : "text-lg leading-relaxed text-muted"}>
-                {p}
-              </p>
-            ))}
-          </div>
-          <h3 className="mb-6 text-sm font-semibold tracking-wide text-river">Education</h3>
+        <Section id="about" title="Education & awards">
           <div className="space-y-10">
             {education.map((e) => (
               <article key={e.degree} className="reveal grid gap-2 sm:grid-cols-[8rem_1fr]">
