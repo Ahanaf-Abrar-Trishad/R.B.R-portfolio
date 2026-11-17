@@ -4,7 +4,7 @@ import { CertificateGallery } from "@/components/CertificateGallery";
 import { Nav } from "@/components/Nav";
 import { FishMussel, FloatingGarden, GlobeRoute } from "@/components/Illustrations";
 import {
-  profile, contact, education, awards, pathway, research, me, publications, skills,
+  siteUrl, profile, contact, education, awards, pathway, research, me, publications, skills,
   leadership, conferences, training, community, languages, certificates,
 } from "@/content/site";
 
@@ -88,8 +88,30 @@ export default function Home() {
       ? { href: "#contact", label: "Get in touch" }
       : { href: "#publications", label: "See publications" };
 
+  // Structured data (schema.org Person) so search engines understand who this page is about.
+  const person = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: profile.name,
+    url: siteUrl,
+    image: `${siteUrl}/opengraph-image`, // static export writes generated images without an extension
+    description: profile.description,
+    jobTitle: "Researcher, Aquatic Ecotoxicology",
+    address: { "@type": "PostalAddress", addressLocality: "Mymensingh", addressCountry: "BD" },
+    alumniOf: { "@type": "CollegeOrUniversity", name: "Bangladesh Agricultural University" },
+    memberOf: [
+      { "@type": "Organization", name: leadership.name, ...(leadership.url && { url: leadership.url }) },
+      { "@type": "Organization", name: "Fisheries Society of Bangladesh" },
+    ],
+    award: awards.map((a) => `${a.title}, ${a.by} (${a.date})`),
+    knowsAbout: ["Aquatic ecotoxicology", "Microplastics", "Fisheries management", ...skills.map((s) => s.title)],
+    knowsLanguage: languages.map((l) => l.name),
+    ...(links.length && { sameAs: links.map(([, url]) => url) }),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person).replace(/</g, "\\u003c") }} />
       <a href="#top" className="sr-only z-50 bg-ink px-4 py-2 text-paper focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
         Skip to content
       </a>
@@ -139,9 +161,13 @@ export default function Home() {
             </div>
             <ol className="mt-4 divide-y divide-line border-y border-line">
               {profile.highlights.map((h, i) => (
-                <li key={h.title} className="rise py-4" style={d(5 + i)}>
-                  <p className="font-display text-lg leading-snug">{h.title}</p>
-                  <p className="mt-1 text-sm text-muted">{h.detail}</p>
+                <li key={h.title} className="rise" style={d(5 + i)}>
+                  <a href={h.href} className="group block py-4">
+                    <span className="block font-display text-lg leading-snug group-hover:text-river">
+                      {h.title} <span aria-hidden className="inline-block text-river opacity-0 transition-opacity group-hover:opacity-100">→</span>
+                    </span>
+                    <span className="mt-1 block text-sm text-muted">{h.detail}</span>
+                  </a>
                 </li>
               ))}
             </ol>

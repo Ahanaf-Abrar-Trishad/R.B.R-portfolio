@@ -2,8 +2,13 @@
 // Empty strings ("") are placeholders: anything left empty is simply not shown on the site.
 // `short` is the heading people read; the full official title is shown underneath in small print.
 
+// The live address: used for the canonical tag, share image, sitemap and structured data.
+export const siteUrl = "https://rubya.agrofeme.com";
+
 export const profile = {
   name: "Rubya Binte Rezanur",
+  description:
+    "Rubya Binte Rezanur is an aquatic ecotoxicologist (M.Sc. Fisheries Management, Bangladesh Agricultural University) studying microplastic toxicity in freshwater fish and mussels, and founder of the AGRO-FEME SEPTET youth innovation team.",
   role: "Aquatic ecotoxicology · Microplastics",
   affiliation: "M.Sc. Fisheries Management, Bangladesh Agricultural University",
   tagline: "I study what microplastics do to freshwater fish and mussels. I also work with farming families to keep their ponds healthy.",
@@ -11,10 +16,11 @@ export const profile = {
   photo: "", // TODO: e.g. "/profile.jpg" placed in web/public/
   bio: "", // TODO: optional 1–2 sentences
   highlights: [
-    { title: "Guest speaker, FAO World Food Forum", detail: "Rome, 2026" },
-    { title: "Winning team, WUR Food Systems Innovation Challenge", detail: "Top 3 of 105+ teams, 2025" },
-    { title: "Best Poster Award", detail: "FSB Young Fisheries Students Congress" },
-    { title: "NST Fellowship", detail: "Ranked 262nd nationally" },
+    // href: where the highlight links on the page (a section, or "#cert=<file>" to open its certificate)
+    { title: "Guest speaker, FAO World Food Forum", detail: "Rome, 2026", href: "#conferences" },
+    { title: "Winning team, WUR Food Systems Innovation Challenge", detail: "Top 3 of 105+ teams, 2025", href: "#leadership" },
+    { title: "Best Poster Award", detail: "FSB Young Fisheries Students Congress", href: "#cert=fsb-best-poster-2026" },
+    { title: "NST Fellowship", detail: "Ranked 262nd nationally", href: "#about" },
   ],
 };
 
