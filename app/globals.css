@@ -1,0 +1,444 @@
+@import "tailwindcss";
+
+:root {
+  /* Paper and river ink, neutrals tinted toward the river hue (≈175). */
+  --paper: oklch(97.6% 0.007 150);
+  --paper-2: oklch(94.6% 0.012 160);
+  --line: oklch(87% 0.014 170);
+  --ink: oklch(23% 0.032 195);
+  --muted: oklch(45% 0.025 190);
+  --river: oklch(43% 0.075 178);
+  --accent: oklch(60% 0.15 42); /* sediment/terracotta, used rarely */
+
+  /* Sakuga VFX controls on paper */
+  --sk-card: oklch(99% 0.004 150);
+  --sk-ink: oklch(23% 0.032 195);
+  --sk-dim: oklch(45% 0.025 190);
+  --sk-soft: oklch(80% 0.06 42);
+  --sk-pri: oklch(43% 0.075 178);
+  --sk-pri-ink: oklch(99% 0.004 150);
+  --sk-acc: oklch(60% 0.15 42);
+  --sk-track: oklch(87% 0.014 170);
+  --sk-on-pri: oklch(99% 0.004 150);
+  --sk-sh: 4px 5px 0 oklch(60% 0.15 42);
+  --sk-bw: 2px;
+  --sk-r: 999px;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-river: var(--river);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Sakuga's in-element effect canvases reach ~160px past their control; clip on main (on body it would propagate to the viewport and still scroll). */
+main {
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+sakuga-button::part(button) {
+  font: 600 1rem/1.1 var(--font-body);
+  letter-spacing: 0;
+  padding: 0.85rem 1.6rem;
+}
+sakuga-tabs {
+  --sk-bw: 1.5px;
+  --sk-sh: 3px 4px 0 var(--line);
+}
+sakuga-tabs::part(tab) {
+  font: 500 0.95rem/1.2 var(--font-body);
+}
+
+/* ───────── Typography (apple-design §15) ─────────
+   Tracking is size-specific: tighten big headings, leave body at 0. Balanced breaks avoid one-word last lines.
+   In @layer base so per-element Tailwind utilities still win. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    font-optical-sizing: auto;
+  }
+  h1 {
+    letter-spacing: -0.03em;
+  }
+  h2 {
+    letter-spacing: -0.02em;
+  }
+  h3,
+  h4 {
+    letter-spacing: -0.01em;
+  }
+  p,
+  li {
+    text-wrap: pretty;
+  }
+}
+
+/* ───────── Motion ─────────
+   Everything below runs only for people who haven't asked for reduced motion.
+   Scroll-driven parts need animation-timeline; other browsers just show the final state. */
+:root {
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Counters (AGRO-FEME figures): the number is a CSS counter so it can count up without JS. */
+@property --n {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+.count {
+  --n: var(--to);
+  counter-reset: n var(--n);
+}
+.count::after {
+  content: counter(n);
+}
+/* Hidden unless the scroll timeline below can drive it. */
+.progress {
+  transform: scaleX(0);
+}
+.rail {
+  transform: scaleY(0);
+  transform-origin: top;
+}
+/* Without motion the route is simply dotted. */
+.ill .route {
+  stroke-dasharray: 0.035 0.025;
+}
+
+/* ───────── Materials (glass) ─────────
+   Used only for layers that float over content: the nav, the hero highlights, the lightbox.
+   Bright top edge = light catching the material; heavier blur + shadow for bigger surfaces. */
+.glass {
+  background: oklch(99% 0.006 150 / 0.55);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid oklch(100% 0 0 / 0.55);
+  box-shadow:
+    inset 0 1px 0 oklch(100% 0 0 / 0.8),
+    0 10px 30px -14px oklch(23% 0.032 195 / 0.3);
+}
+.glass-raised {
+  box-shadow:
+    inset 0 1px 0 oklch(100% 0 0 / 0.8),
+    0 16px 40px -14px oklch(23% 0.032 195 / 0.4);
+}
+.glass-thick {
+  background: oklch(98% 0.008 150 / 0.72);
+  -webkit-backdrop-filter: blur(40px) saturate(160%);
+  backdrop-filter: blur(40px) saturate(160%);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-thick {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+dialog::backdrop {
+  background: oklch(23% 0.032 195 / 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero load choreography: name lines rise from a mask, then the rest staggers in. */
+  .rise {
+    animation: rise 0.9s var(--ease-out-expo) both;
+    animation-delay: calc(var(--d, 0) * 90ms + 100ms);
+  }
+  .rise-line {
+    display: block;
+    animation: rise-line 1s var(--ease-out-expo) both;
+    animation-delay: calc(var(--d, 0) * 110ms);
+  }
+  .draw {
+    transform-origin: left;
+    animation: draw 0.8s var(--ease-out-quart) both;
+    animation-delay: calc(var(--d, 0) * 90ms + 100ms);
+  }
+
+  /* A microplastic travelling along the river-to-tissue strip. */
+  .particle {
+    animation: drift 7s var(--ease-out-quart) infinite;
+  }
+
+  /* Small transitions that make state changes feel continuous. */
+  a,
+  button {
+    transition: color 200ms var(--ease-out-quart), background-color 250ms var(--ease-out-quart), text-decoration-color 200ms var(--ease-out-quart),
+      border-color 200ms var(--ease-out-quart);
+  }
+
+  /* Instant acknowledgement on press-down (apple-design §1); colours keep their own timing. */
+  .press {
+    transition: transform 100ms ease-out, color 200ms var(--ease-out-quart), background-color 250ms var(--ease-out-quart),
+      border-color 200ms var(--ease-out-quart);
+  }
+  .press:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* Lightbox: the certificate itself flies out of its thumbnail (JS); the glass panel materializes around it. */
+  .lightbox {
+    transition: overlay 250ms allow-discrete, display 250ms allow-discrete;
+  }
+  .lb-panel {
+    transition: opacity 250ms var(--ease-out-quart), filter 250ms var(--ease-out-quart), transform 300ms var(--ease-out-quart);
+  }
+  @starting-style {
+    .lightbox[open] .lb-panel {
+      opacity: 0;
+      filter: blur(8px);
+      transform: scale(0.98);
+    }
+  }
+  .lightbox[data-state="closing"] .lb-panel {
+    opacity: 0;
+    filter: blur(6px);
+    transition-duration: 220ms;
+  }
+  .lightbox[data-state="closing"]::backdrop {
+    opacity: 0;
+  }
+
+  /* Illustrations: particles bob, fish swim, the Dhaka→Rome route marches. */
+  .ill .particles circle {
+    transform-box: fill-box;
+    animation: bob 3.6s ease-in-out infinite alternate;
+  }
+  .ill .swim {
+    animation: swim 6s ease-in-out infinite alternate;
+  }
+  .ill .swim-2 {
+    animation-duration: 8s;
+    animation-direction: alternate-reverse;
+  }
+  .ill .route {
+    stroke-dasharray: 0.035 0.025;
+    animation: march 2.4s linear infinite;
+  }
+
+  /* Slow ambient drift for the light behind the hero glass. */
+  .ambient {
+    animation: ambient 18s ease-in-out infinite alternate;
+  }
+  .ambient-2 {
+    animation: ambient 22s ease-in-out infinite alternate-reverse;
+  }
+  dialog::backdrop {
+    transition: opacity 250ms, overlay 250ms allow-discrete, display 250ms allow-discrete;
+    opacity: 0;
+  }
+  dialog[open]::backdrop {
+    opacity: 1;
+  }
+  @starting-style {
+    dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /* Certificates fade in, one after another, when the tab changes. */
+  .stagger {
+    animation: rise 0.6s var(--ease-out-quart) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    /* Pathway steps light up in order as the strip scrolls into view. */
+    .step {
+      animation: step linear both;
+      animation-timeline: view();
+      animation-range: entry calc(20% + var(--i) * 12%) cover calc(35% + var(--i) * 6%);
+    }
+    .pop {
+      animation: pop linear both;
+      animation-timeline: view();
+      animation-range: entry 20% entry 70%;
+    }
+    .count {
+      animation: count linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 45%;
+    }
+    /* Leadership title slides in as it arrives. */
+    .drift-in {
+      animation: drift-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+    /* Illustration lines draw themselves in as the drawing scrolls into view. */
+    .ill {
+      view-timeline: --ill;
+    }
+    .ill [pathLength]:not(.route) {
+      stroke-dasharray: 1;
+      animation: ill-draw linear both;
+      animation-timeline: --ill;
+      /* Finish while entering: the desktop drawings sit in a sticky column, where view progress would freeze mid-way. */
+      animation-range: entry 0% entry 100%;
+    }
+    /* Conferences: the rail fills to wherever the middle of the screen is; entries slide in. */
+    .rail {
+      animation: rail linear both;
+      animation-timeline: view();
+      animation-range: entry 50% exit 50%;
+    }
+    .slide-in {
+      animation: slide-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+    /* Reading progress under the nav. */
+    .progress {
+      transform-origin: left;
+      animation: progress linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes rise-line {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+/* Applied to a full-width track holding the dot at its left edge, so translateX(100%) = the strip's width. */
+@keyframes drift {
+  0% {
+    transform: translateX(0%);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+@keyframes step {
+  from {
+    opacity: 0.25;
+    transform: translateY(8px);
+  }
+}
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
+}
+@keyframes count {
+  from {
+    --n: 0;
+  }
+}
+@keyframes drift-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6%);
+  }
+}
+@keyframes ill-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes bob {
+  to {
+    transform: translateY(-5px);
+  }
+}
+@keyframes swim {
+  to {
+    transform: translateX(14px);
+  }
+}
+@keyframes march {
+  to {
+    stroke-dashoffset: -0.12;
+  }
+}
+@keyframes rail {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-1.5rem);
+  }
+}
+@keyframes ambient {
+  to {
+    transform: translate(-6%, 8%) scale(1.12);
+  }
+}
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
