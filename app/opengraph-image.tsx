@@ -5,7 +5,7 @@ import { profile, siteUrl } from "@/content/site";
 
 // Social share card (Open Graph / X), generated once at build time.
 export const dynamic = "force-static";
-export const alt = `${profile.name} — aquatic ecotoxicology and microplastics researcher`;
+export const alt = `${profile.name}, aquatic ecotoxicology and microplastics researcher`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

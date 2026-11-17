@@ -7,7 +7,7 @@ import "./globals.css";
 const display = Young_Serif({ variable: "--font-display", subsets: ["latin"], weight: "400" });
 const body = Schibsted_Grotesk({ variable: "--font-body", subsets: ["latin"] });
 
-const title = `${profile.name} — Aquatic Ecotoxicology & Microplastics`;
+const title = `${profile.name} | Aquatic Ecotoxicology & Microplastics`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
