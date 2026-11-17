@@ -10,7 +10,7 @@ import {
 } from "@/content/site";
 
 const nav = [
-  ["about", "Education"],
+  ["about", "About"],
   ["research", "Research"],
   ["publications", "Publications"],
   ["leadership", "Leadership"],
@@ -97,8 +97,10 @@ export default function Home() {
     url: siteUrl,
     image: `${siteUrl}/opengraph-image`, // static export writes generated images without an extension
     description: profile.description,
-    jobTitle: "Researcher, Aquatic Ecotoxicology",
-    address: { "@type": "PostalAddress", addressLocality: "Mymensingh", addressCountry: "BD" },
+    jobTitle: profile.jobTitle,
+    worksFor: { "@type": "CollegeOrUniversity", name: "Bangladesh Agricultural University", department: { "@type": "Organization", name: "Aquatic Ecology Laboratory, Department of Fisheries Management" } },
+    email: `mailto:${contact.email}`,
+    address: { "@type": "PostalAddress", addressLocality: profile.location.split(",")[0], addressCountry: "BD" },
     alumniOf: { "@type": "CollegeOrUniversity", name: "Bangladesh Agricultural University" },
     memberOf: [
       { "@type": "Organization", name: leadership.name, ...(leadership.url && { url: leadership.url }) },
@@ -183,8 +185,15 @@ export default function Home() {
           </aside>
         </section>
 
-        <Section id="about" title="Education & awards">
-          {profile.bio && <p className="reveal mb-14 max-w-[62ch] text-xl">{profile.bio}</p>}
+        <Section id="about" title="About">
+          <div className="reveal mb-16 max-w-[62ch] space-y-5">
+            {profile.bio.map((p, i) => (
+              <p key={i} className={i === 0 ? "text-xl leading-relaxed" : "text-lg leading-relaxed text-muted"}>
+                {p}
+              </p>
+            ))}
+          </div>
+          <h3 className="mb-6 text-sm font-semibold tracking-wide text-river">Education</h3>
           <div className="space-y-10">
             {education.map((e) => (
               <article key={e.degree} className="reveal grid gap-2 sm:grid-cols-[8rem_1fr]">
@@ -459,8 +468,13 @@ export default function Home() {
                   <CopyEmail email={contact.email} />
                 </>
               )}
+              {contact.whatsapp && (
+                <a href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener" className="press rounded-full border border-paper/40 px-5 py-2.5 hover:border-paper">
+                  WhatsApp ↗
+                </a>
+              )}
               {links.map(([label, url]) => (
-                <a key={label} href={url} target="_blank" className="rounded-full border border-paper/40 px-5 py-2.5 hover:border-paper">
+                <a key={label} href={url} target="_blank" rel="noopener" className="press rounded-full border border-paper/40 px-5 py-2.5 hover:border-paper">
                   {label} ↗
                 </a>
               ))}

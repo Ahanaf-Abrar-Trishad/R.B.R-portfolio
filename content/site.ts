@@ -8,14 +8,20 @@ export const siteUrl = "https://rubya.agrofeme.com";
 export const profile = {
   name: "Rubya Binte Rezanur",
   description:
-    "Rubya Binte Rezanur is an aquatic ecotoxicologist (M.Sc. Fisheries Management, Bangladesh Agricultural University) studying microplastic toxicity in freshwater fish and mussels, and founder of the AGRO-FEME SEPTET youth innovation team.",
+    "Rubya Binte Rezanur is a Research Assistant at the Aquatic Ecology Laboratory, Bangladesh Agricultural University, studying how microplastics and other emerging contaminants affect freshwater fish and mussels. She founded the AGRO-FEME SEPTET youth innovation team.",
   role: "Aquatic ecotoxicology · Microplastics",
-  affiliation: "M.Sc. Fisheries Management, Bangladesh Agricultural University",
+  jobTitle: "Research Assistant",
+  affiliation: "Research Assistant, Aquatic Ecology Laboratory, Bangladesh Agricultural University",
   tagline: "I study what microplastics do to freshwater fish and mussels. I also work with farming families to keep their ponds healthy.",
-  location: "Mymensingh, Bangladesh",
+  location: "Bogura, Bangladesh",
   photo: "/photos/fao-speaking.jpg",
   photoAlt: "Rubya Binte Rezanur speaking on stage at the FAO World Food Forum in Rome",
-  bio: "", // TODO: optional 1–2 sentences
+  // About me, one string per paragraph.
+  bio: [
+    "I'm a Research Assistant at the Aquatic Ecology Laboratory, Department of Fisheries Management, Bangladesh Agricultural University. My work looks at how emerging contaminants affect aquatic animals: what they do to growth, blood chemistry and tissues, and how they move through water, sediment and food chains. I've learned it in the lab, on field surveys and through shared research projects.",
+    "I grew up in Bangladesh, where rivers and ponds put food on the table and keep families in work. So I care about what happens outside the lab too. I lead youth-led innovation and community projects, and I take that work to international platforms that link healthy water with fair food systems.",
+    "What I want is simple: healthy ecosystems that hold up the communities living from them, environmental decisions grounded in evidence, and new ideas that give people a living.",
+  ],
   highlights: [
     // href: where the highlight links on the page (a section, or "#cert=<file>" to open its certificate)
     { title: "Guest speaker, FAO World Food Forum", detail: "Rome, 2026", href: "#conferences" },
@@ -26,10 +32,11 @@ export const profile = {
 };
 
 export const contact = {
-  email: "", // TODO
-  linkedin: "", // TODO: full URL
+  email: "rezanur.1906105@bau.edu.bd",
+  whatsapp: "+8801947855266", // international format; shown as a tap-to-chat link
+  linkedin: "https://www.linkedin.com/in/rubya-binte-rezanur",
   scholar: "", // TODO: Google Scholar URL
-  orcid: "", // TODO: ORCID URL
+  orcid: "https://orcid.org/0009-0003-5015-215X",
   researchgate: "", // TODO
   cv: "", // TODO: e.g. "/cv.pdf" placed in web/public/
 };
