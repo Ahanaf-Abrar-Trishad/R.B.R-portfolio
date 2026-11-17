@@ -13,7 +13,8 @@ export const profile = {
   affiliation: "M.Sc. Fisheries Management, Bangladesh Agricultural University",
   tagline: "I study what microplastics do to freshwater fish and mussels. I also work with farming families to keep their ponds healthy.",
   location: "Mymensingh, Bangladesh",
-  photo: "", // TODO: e.g. "/profile.jpg" placed in web/public/
+  photo: "/photos/fao-speaking.jpg",
+  photoAlt: "Rubya Binte Rezanur speaking on stage at the FAO World Food Forum in Rome",
   bio: "", // TODO: optional 1–2 sentences
   highlights: [
     // href: where the highlight links on the page (a section, or "#cert=<file>" to open its certificate)
@@ -139,14 +140,17 @@ export const publications = {
   ],
 };
 
+// A photo shown on the page: file in web/public/photos/, plus a description for screen readers and search.
+export type Photo = { src: string; alt: string };
+
 // Skills with an image also appear as photo figures above the list.
-export const skills = [
-  { group: "Lab", title: "Exposure studies & ecotoxicology", image: "" },
-  { group: "Lab", title: "LC50 determination", image: "" },
-  { group: "Lab", title: "Growth & biochemical stress", image: "" },
-  { group: "Lab", title: "Microplastic extraction & counting", image: "" },
-  { group: "Lab", title: "DNA extraction & PCR", image: "" },
-  { group: "Field", title: "Water, sediment & tissue sampling", image: "" },
+export const skills: { group: string; title: string; image: string; alt?: string }[] = [
+  { group: "Lab", title: "Exposure studies & ecotoxicology", image: "/photos/lab-microscope.jpg", alt: "Rubya examining samples under a microscope" },
+  { group: "Lab", title: "LC50 determination", image: "/photos/lab-pipetting.jpg", alt: "Pipetting samples into a rack of test tubes" },
+  { group: "Lab", title: "Growth & biochemical stress", image: "/photos/lab-spectrophotometer.jpg", alt: "Reading a sample on a spectrophotometer" },
+  { group: "Lab", title: "Microplastic extraction & counting", image: "/photos/lab-filtration.jpg", alt: "Rubya vacuum-filtering a sample to extract microplastics" },
+  { group: "Lab", title: "DNA extraction & PCR", image: "/photos/lab-bench.jpg", alt: "Rubya preparing samples at the lab bench" },
+  { group: "Field", title: "Water, sediment & tissue sampling", image: "/photos/lab-water-quality.jpg", alt: "Measuring water quality with a probe and meter" },
   { group: "Field", title: "Field surveys", image: "" },
   { group: "Field", title: "Spatial mapping", image: "" },
   { group: "Desk", title: "R & SPSS", image: "" },
@@ -170,6 +174,14 @@ export const leadership = {
     { figure: "12", text: "young people learning with us" },
   ],
   myRole: "I started the team and lead it: shaping the idea, running the group, and working in the field with families.",
+  photos: [
+    { src: "/photos/floating-garden-aerial.jpg", alt: "Aerial view of floating vegetable garden beds on a pond" },
+    { src: "/photos/floating-garden-boats.jpg", alt: "Team members in a boat among the floating vegetable gardens" },
+    { src: "/photos/floating-garden-farmers.jpg", alt: "Women farmers preparing seedlings for the floating gardens" },
+    { src: "/photos/floating-garden-boat.jpg", alt: "Working from a small boat beside a floating garden bed" },
+    { src: "/photos/wur-award.jpg", alt: "Winning teams on stage at the Food Systems Innovation Challenge awards" },
+    { src: "/photos/agrofeme-poster.jpg", alt: "Rubya beside the Integrated Floating Vegetable Garden poster" },
+  ] as Photo[],
 };
 
 // cert: filename (without .jpg) in web/public/certificates/
@@ -181,6 +193,15 @@ export const conferences = [
     kind: "Team representative",
     text: "Presented our innovation for the Youth Food Lab Global Cohort 2026.",
     cert: "",
+    photos: [
+      { src: "/photos/fao-un-flags.jpg", alt: "Rubya between the UN and FAO flags at FAO headquarters" },
+      { src: "/photos/fao-youth-cohort.jpg", alt: "The Youth Food Lab Global Cohort on stage at the World Food Forum" },
+      { src: "/photos/fao-plenary.jpg", alt: "The World Food Forum plenary hall in Rome" },
+      { src: "/photos/fao-flags.jpg", alt: "Flags of member nations hanging at the World Food Forum" },
+      { src: "/photos/fao-cohort-selfie.jpg", alt: "Rubya with fellow cohort members in Rome" },
+      { src: "/photos/fao-emblem.jpg", alt: "Rubya in front of the FAO emblem" },
+      { src: "/photos/fao-grand-opening.jpg", alt: "Grand opening of the World Food Forum flagship event" },
+    ] as Photo[],
   },
   {
     title: "Women Leaders of Science, Technology, and Innovation in Agrifood Systems",
@@ -189,6 +210,11 @@ export const conferences = [
     kind: "Guest speaker",
     text: "Talked about AGRO-FEME SEPTET, youth-led innovation, and what still holds women back in agrifood science.",
     cert: "",
+    photos: [
+      { src: "/photos/fao-dialogue.jpg", alt: "Rubya taking part in the intergenerational dialogue" },
+      { src: "/photos/fao-roundtable.jpg", alt: "The Women Leaders roundtable at the World Food Forum" },
+      { src: "/photos/fao-roundtable-2.jpg", alt: "Participants listening during the Women Leaders dialogue" },
+    ] as Photo[],
   },
   { title: "BAPA-BEN National Conference on Environmental Reforms", where: "Krishibid Institute, Dhaka", date: "2026", kind: "Oral", text: "", cert: "" },
   {
@@ -198,6 +224,7 @@ export const conferences = [
     kind: "Poster",
     text: "",
     cert: "fsb-best-poster-2026",
+    photos: [{ src: "/photos/best-poster-award.jpg", alt: "Rubya receiving the Best Poster Presentation award" }] as Photo[],
   },
   { title: "International Conference on Environment and Climate Action (ICECA)", where: "Asian University for Women, Chittagong", date: "2025", kind: "Poster", text: "", cert: "iceca-2025" },
   { title: "Conference on Sustainable Aquaculture and Fisheries", where: "CVASU Fish Festival", date: "Apr 2025", kind: "Oral", text: "", cert: "cvasu-conference-2025" },
@@ -212,15 +239,29 @@ export const training = [
 ];
 
 export const community = [
-  { name: "HASHIMUKH", role: "Treasurer, 2023–24", text: "Student volunteer group for social welfare and the environment." },
+  {
+    name: "HASHIMUKH",
+    role: "Treasurer, 2023–24",
+    text: "Student volunteer group for social welfare and the environment.",
+    photos: [
+      { src: "/photos/hashimukh-school-banner.jpg", alt: "HASHIMUKH volunteers with schoolchildren outside a primary school" },
+      { src: "/photos/hashimukh-school-children.jpg", alt: "Schoolchildren cheering during a HASHIMUKH school visit" },
+      { src: "/photos/hashimukh-classroom.jpg", alt: "Volunteers running an activity with children in a classroom" },
+      { src: "/photos/hashimukh-meal.jpg", alt: "Rubya serving a meal to children" },
+      { src: "/photos/hashimukh-distribution.jpg", alt: "Volunteers handing out supplies" },
+      { src: "/photos/hashimukh-relief.jpg", alt: "Relief packages being distributed to families" },
+      { src: "/photos/hashimukh-campus-group.jpg", alt: "HASHIMUKH members on campus with their banner" },
+      { src: "/photos/hashimukh-banner.jpg", alt: "HASHIMUKH members with an event banner" },
+    ] as Photo[],
+  },
   { name: "BADHON Foundation", role: "Blood donor", text: "" },
   { name: "Fisheries Society of Bangladesh", role: "Member, 2026", text: "" },
 ];
 
 export const languages = [
-  { name: "Bangla", level: "native" },
-  { name: "English", level: "IELTS 7.5" },
-  { name: "Spanish", level: "learning" },
+  { name: "Bangla", level: "Native" },
+  { name: "English", level: "Proficient · IELTS 7.5" },
+  { name: "Spanish", level: "Learning" },
 ];
 
 export type CertCategory = "Events" | "Training" | "Service";

@@ -4,7 +4,7 @@ import { CertificateGallery } from "@/components/CertificateGallery";
 import { Nav } from "@/components/Nav";
 import { FishMussel, FloatingGarden, GlobeRoute } from "@/components/Illustrations";
 import {
-  siteUrl, profile, contact, education, awards, pathway, research, me, publications, skills,
+  type Photo, siteUrl, profile, contact, education, awards, pathway, research, me, publications, skills,
   leadership, conferences, training, community, languages, certificates,
 } from "@/content/site";
 
@@ -52,6 +52,20 @@ function Authors({ text }: { text: string }) {
 
 // Stagger step for the hero's load animation (see .rise in globals.css).
 const d = (n: number) => ({ "--d": n }) as React.CSSProperties;
+
+// A row of photos: swipeable on phones, a grid on larger screens.
+function Photos({ items, className = "" }: { items?: Photo[]; className?: string }) {
+  if (!items?.length) return null;
+  return (
+    <ul className={`-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0 ${className}`}>
+      {items.map((p) => (
+        <li key={p.src} className="w-[72%] shrink-0 snap-start scroll-ml-4 sm:w-auto">
+          <img src={p.src} alt={p.alt} loading="lazy" decoding="async" className="aspect-4/3 w-full rounded-xl bg-paper-2 object-cover" />
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 // Italicise species binomials written in parentheses, e.g. "(Oreochromis niloticus)".
 function Sci({ text }: { text: string }) {
@@ -154,7 +168,15 @@ export default function Home() {
           </div>
 
           <aside aria-label="Highlights" className="glass self-start rounded-3xl p-6 sm:p-8 lg:mt-10">
-            {profile.photo && <img src={profile.photo} alt={profile.name} className="mb-10 aspect-[4/5] w-full max-w-sm object-cover" />}
+            {profile.photo && (
+              <img
+                src={profile.photo}
+                alt={profile.photoAlt}
+                fetchPriority="high"
+                className="rise mb-8 aspect-4/5 w-full rounded-2xl object-cover object-[48%_30%]"
+                style={d(3)}
+              />
+            )}
             <div className="rise flex items-center gap-3" style={d(4)}>
               <span aria-hidden className="draw h-px w-8 bg-accent" style={d(6)} />
               <p className="text-sm font-semibold tracking-wide">Highlights</p>
@@ -205,15 +227,15 @@ export default function Home() {
             ))}
           </ol>
 
-          <p className="mt-12 text-muted">
-            <span className="font-semibold text-ink">Speaks</span>{" "}
-            {languages.map((l, i) => (
-              <span key={l.name}>
-                {i > 0 && " · "}
-                {l.name} <span className="text-sm">({l.level})</span>
-              </span>
+          <h3 className="mt-14 text-sm font-semibold tracking-wide text-river sm:mt-20">Languages</h3>
+          <ul className="mt-4 grid grid-cols-3 divide-x divide-line border-y border-line">
+            {languages.map((l) => (
+              <li key={l.name} className="reveal px-3 py-5 first:pl-0 sm:px-6">
+                <p className="font-display text-xl leading-snug">{l.name}</p>
+                <p className="mt-1 text-sm text-muted">{l.level}</p>
+              </li>
             ))}
-          </p>
+          </ul>
         </Section>
 
         <Section id="research" title="Research" art={<FishMussel className="w-full" />}>
@@ -261,7 +283,7 @@ export default function Home() {
             <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
               {pictured.map((s) => (
                 <figure key={s.title}>
-                  <img src={s.image} alt="" loading="lazy" className="aspect-4/3 w-full object-cover" />
+                  <img src={s.image} alt={s.alt ?? s.title} loading="lazy" decoding="async" className="aspect-4/3 w-full rounded-xl object-cover" />
                   <figcaption className="mt-2 text-sm">{s.title}</figcaption>
                 </figure>
               ))}
@@ -367,6 +389,8 @@ export default function Home() {
               </div>
             </div>
 
+            <Photos items={leadership.photos} className="reveal mt-12" />
+
             <h3 className="mt-16 font-display text-2xl sm:mt-24 sm:text-3xl">Community service</h3>
             <ul className="mt-6 divide-y divide-line border-y border-line">
               {community.map((c) => (
@@ -376,6 +400,7 @@ export default function Home() {
                     <p className="text-sm text-river">{c.role}</p>
                   </div>
                   {c.text && <p className="max-w-[60ch] text-muted">{c.text}</p>}
+                  {"photos" in c && <Photos items={c.photos} className="mt-4 sm:col-span-2" />}
                 </li>
               ))}
             </ul>
@@ -400,6 +425,7 @@ export default function Home() {
                     <CertLink file={c.cert} />
                   </p>
                 )}
+                {"photos" in c && <Photos items={c.photos} className="mt-5" />}
               </li>
             ))}
           </ol>
